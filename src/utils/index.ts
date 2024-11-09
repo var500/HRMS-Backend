@@ -1,0 +1,1 @@
+export { getHash } from './helpers';
