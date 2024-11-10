@@ -2,7 +2,12 @@ import { Controller, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { CreateEmployeeDto, EmployeeAddressDto, EmployeeLoginDto } from './dto';
+import {
+  BANK_DETAILS_DTO,
+  CreateEmployeeDto,
+  EmployeeAddressDto,
+  EmployeeLoginDto,
+} from './dto';
 
 @Controller('employee')
 export class EmployeesController {
@@ -21,6 +26,11 @@ export class EmployeesController {
   @Post('/address')
   address(@Body() body: EmployeeAddressDto) {
     return this.employeesService.employeeAddress(body);
+  }
+
+  @Post('/bank')
+  bank(@Body() body: BANK_DETAILS_DTO) {
+    return this.employeesService.employeeBankDetails(body);
   }
 
   @Patch(':id')

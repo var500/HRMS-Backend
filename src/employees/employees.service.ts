@@ -13,9 +13,15 @@ import { Model } from 'mongoose';
 import { EmployeesDocument } from 'src/schema/employees.schema';
 import { Messages } from 'src/utils/messages';
 import { getHash } from 'src/utils';
-import { CreateEmployeeDto, EmployeeAddressDto, EmployeeLoginDto } from './dto';
+import {
+  BANK_DETAILS_DTO,
+  CreateEmployeeDto,
+  EmployeeAddressDto,
+  EmployeeLoginDto,
+} from './dto';
 import { verifyHash } from 'src/utils/helpers';
 import { AddressDocument } from 'src/schema/address.schema';
+import { BankDocument } from 'src/schema/bank-details.schema';
 
 @Injectable()
 export class EmployeesService {
@@ -24,7 +30,10 @@ export class EmployeesService {
     private readonly employeeModel: Model<EmployeesDocument>,
     @InjectModel('address')
     private readonly addressModel: Model<AddressDocument>,
+    @InjectModel('banks')
+    private readonly bankModel: Model<BankDocument>,
   ) {}
+
   async signUp(data: CreateEmployeeDto) {
     try {
       const { name, avatar, email, password } = data;
@@ -102,7 +111,7 @@ export class EmployeesService {
         new: true,
         runValidators: true,
       })
-      .select('-password, -__v')
+      .select('-password -__v')
       .exec();
 
     if (!updatedEmployee) {
@@ -126,6 +135,23 @@ export class EmployeesService {
     );
 
     return address;
+  }
+
+  async employeeBankDetails(data: BANK_DETAILS_DTO) {
+    const { accountNumber, bankName, branch, ifsc, employeeId } = data;
+
+    const employee = await this.employeeModel.findById(employeeId);
+    if (!employee) {
+      throw new NotFoundException(`Employee with ID ${employeeId} not found`);
+    }
+
+    const bank = await this.bankModel.findOneAndUpdate(
+      { employeeId }, // Find address by employeeId
+      { $set: { accountNumber, bankName, branch, ifsc } },
+      { upsert: true, new: true, runValidators: true }, // Create if not exists, return the updated doc
+    );
+
+    return bank;
   }
 
   async remove(id: string) {
