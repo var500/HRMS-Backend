@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { BankDetails } from './bank-details.schema';
+import { Address } from './address.schema';
 
 export type EmployeesDocument = HydratedDocument<Employee>;
 @Schema({
@@ -31,6 +33,18 @@ export class Employee {
 
   @Prop()
   mobile: number;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'banks',
+  })
+  bankDetailsId: BankDetails;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'address',
+  })
+  addressId: Address;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

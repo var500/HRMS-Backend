@@ -134,6 +134,9 @@ export class EmployeesService {
       { upsert: true, new: true, runValidators: true }, // Create if not exists, return the updated doc
     );
 
+    employee.addressId = address.id;
+    employee.save();
+
     return address;
   }
 
@@ -151,7 +154,24 @@ export class EmployeesService {
       { upsert: true, new: true, runValidators: true }, // Create if not exists, return the updated doc
     );
 
+    employee.bankDetailsId = bank.id;
+    employee.save();
+
     return bank;
+  }
+
+  async getEmployeeById(id: string) {
+    const checkEmp = await this.employeeModel
+      .findOne({
+        id,
+      })
+      .select('-password')
+      .populate('bankDetailsId addressId');
+    if (!checkEmp) {
+      throw new NotFoundException(Messages.EMPLOYEE_NOT_FOUND);
+    }
+
+    return checkEmp;
   }
 
   async remove(id: string) {

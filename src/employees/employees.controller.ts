@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Get,
+} from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -12,6 +20,11 @@ import {
 @Controller('employee')
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
+
+  @Get(':id')
+  getEmployee(@Param(':id') id: string) {
+    return this.employeesService.getEmployeeById(id);
+  }
 
   @Post('/signup')
   create(@Body() createEmployeeDto: CreateEmployeeDto) {
