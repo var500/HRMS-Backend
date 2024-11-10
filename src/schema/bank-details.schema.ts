@@ -2,21 +2,24 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { Employee } from './employees.schema';
 
-export type AddressDocument = HydratedDocument<Address>;
+export type BankDocument = HydratedDocument<BankDetails>;
 @Schema({
   timestamps: true,
   toObject: { virtuals: true },
   toJSON: { virtuals: true },
 })
-export class Address {
-  @Prop()
-  city: string;
-  @Prop()
-  landmark: string;
-  @Prop()
-  state: string;
-  @Prop()
-  pincode: number;
+export class BankDetails {
+  @Prop({ required: true })
+  bankName: string;
+
+  @Prop({ required: true })
+  accountNumber: string;
+
+  @Prop({ required: true })
+  ifsc: string;
+
+  @Prop({ required: true })
+  branch: string;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
@@ -26,4 +29,4 @@ export class Address {
   employeeId: Employee;
 }
 
-export const AddressSchema = SchemaFactory.createForClass(Address);
+export const BankSchema = SchemaFactory.createForClass(BankDetails);

@@ -1,24 +1,24 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
-export class EmployeeAddressDto {
+export class BANK_DETAILS_DTO {
   @ApiProperty()
   @IsNotEmpty()
   employeeId: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  city: string;
+  bankName: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  landmark: string;
+  accountNumber: string;
 
   @ApiProperty()
   @IsNotEmpty()
-  state: string;
+  ifsc: string;
 
   @ApiProperty()
-  @Length(6)
-  pincode: string;
+  @IsNotEmpty()
+  branch: string;
 }
